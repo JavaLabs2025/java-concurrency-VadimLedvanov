@@ -41,7 +41,7 @@ public class SimulateDinner {
 
         Thread[] treads = new Thread[philosopherCount];
         for (int i = 0; i < philosopherCount; i++) {
-            philosopfers[i] = new Philosopfer(i, spoons[i], spoons[(i + 1) % philosopherCount], queue, running, barrier);
+            philosopfers[i] = new Philosopfer(i, spoons[i], spoons[(i + 1) % philosopherCount], queue, running);
             treads[i] = new Thread(philosopfers[i]);
         }
 

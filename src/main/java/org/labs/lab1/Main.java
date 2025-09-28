@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         int philosopherCount = 7;
         int waiterCount = 2;
-        int soups = 1_000_000;
+        int soups = 10000;
 
         SimulateDinner simulateDinner = new SimulateDinner(philosopherCount, waiterCount, soups);
         ResultDto resultDto = simulateDinner.startDinner();

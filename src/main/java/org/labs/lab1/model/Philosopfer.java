@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -19,29 +18,21 @@ public class Philosopfer implements Runnable {
     private final Spoon rightSpoon;
     private final BlockingQueue<Request> queue;
     private final AtomicBoolean running;
-    private final CyclicBarrier barrier;
     private int totalHasEaten = 0;
 
     @Override
     public void run() {
         try {
-            int phase = 0;
             while (running.get()) {
                 think();
 
-                if ((phase % 2 == 0 && id % 2 == 0)
-                        || (phase % 2 != 0 && id % 2 != 0)) {
-
-                    if (!takeNewSoup()) {
-                        running.set(false);
-                        break;
-                    }
-
-                    eat();
+                if (!takeNewSoup()) {
+                    running.set(false);
+                    break;
                 }
 
-                barrier.await();
-                phase++;
+                eat();
+
             }
         } catch (Exception e) {
             Thread.currentThread().interrupt();
@@ -75,7 +66,8 @@ public class Philosopfer implements Runnable {
         return false;
     }
 
-    private void eat() {
+    private void eat() throws InterruptedException {
+        Thread.sleep((int) (Math.random() + id));
         Spoon first = (leftSpoon.getId() < rightSpoon.getId()) ? leftSpoon : rightSpoon;
         Spoon second = (first == leftSpoon) ? rightSpoon : leftSpoon;
 
@@ -88,8 +80,8 @@ public class Philosopfer implements Runnable {
         first.putDown();
     }
 
-    private void think() {
+    private void think() throws InterruptedException {
 //            log.info("Философ №{} думает", id);
-//            Thread.sleep(10);
+            Thread.sleep((int) (Math.random() + id));
     }
 }
